@@ -2,7 +2,7 @@ import createHttpError from 'http-errors';
 import validator from "validator";
 import UserModel from '../models/userModel.js';
 
-
+const {DEFAULT_PICTURE,DEFAULT_STATUS} = process.env
 
 export const createUser = async (userData) => {
   const { name, email, picture, status, password } = userData;
@@ -18,6 +18,7 @@ export const createUser = async (userData) => {
   ) {
     throw createHttpError.BadRequest("Please fill all fields");
   }
+  //check status length
   if (status && status.length > 64) {
     if (status.length > 60) {
       throw createHttpError.BadRequest(
@@ -46,8 +47,8 @@ export const createUser = async (userData) => {
   const user = await new UserModel({
     name,
     email,
-    picture:picture || process.env.DEFAULT_PICTURE,
-    status:status || process.env.DEFAULT_STATUS,
+    picture:picture || DEFAULT_PICTURE,
+    status:status ||  DEFAULT_STATUS,
     password,
   }).save();
 
