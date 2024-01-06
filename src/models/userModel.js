@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 import validator from "validator";
-import bycrpt from "bcrypt";
+import bcrypt from "bcrypt"
 const userSchema = mongoose.Schema(
   {
     name: {
@@ -39,15 +39,18 @@ const userSchema = mongoose.Schema(
 userSchema.pre("save", async function (next) {
   try {
     if (this.isNew) {
-      const salt = await bycrpt.genSalt(12);
-      const hashedPassword = bycrpt.hash(this.password, salt);
+      const salt = await bcrypt.genSalt(12);
+      const hashedPassword = await bcrypt.hash(this.password, salt);
       this.password = hashedPassword;
     }
     next();
   } catch (error) {
+    console.log(error)
     next(error);
+    console.log(error)
   }
 });
-const UserModel = mongoose.model("UserModel ", userSchema);
+const UserModel =
+mongoose.models.UserModel || mongoose.model("UserModel ", userSchema);
 
 export default UserModel;

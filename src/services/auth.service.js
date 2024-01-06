@@ -1,7 +1,7 @@
 import createHttpError from 'http-errors';
 import validator from "validator";
-import UserModel from '../models/userModel.js';
-
+import {UserModel} from '../models/index.js';
+import bcrypt from "bcrypt"
 const {DEFAULT_PICTURE,DEFAULT_STATUS} = process.env
 
 export const createUser = async (userData) => {
@@ -44,6 +44,9 @@ export const createUser = async (userData) => {
   })){
     throw createHttpError.BadRequest('Please make sure your password is between 6 and 128 characters')
   }
+  //hash password --> to be done is user model
+
+  //adding user to database
   const user = await new UserModel({
     name,
     email,
@@ -53,4 +56,19 @@ export const createUser = async (userData) => {
   }).save();
 
   return user;
+}
+
+export const signUser = async (email,password) =>{
+  const user = await UserModel.findOne({email:email.toLowerCase()}).lean();
+
+  //check if user exieit
+  if(!user)  throw createHttpError.NotFound("Invalid clent details");
+  
+  //compare password
+  let passwordMatches = await bcrypt.compare(password,user.password);
+  if(!passwordMatches) throw createHttpError.NotFound('Invalid credentials');
+
+  return user
+
+  
 }

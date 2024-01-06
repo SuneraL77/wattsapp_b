@@ -1,4 +1,4 @@
-import { createUser } from "../services/auth.service.js";
+import { createUser, signUser } from "../services/auth.service.js";
 import { generateToken, verifyToken } from "../services/token.service.js";
 import createHttpError from 'http-errors';
 import { findUser } from "../services/user.service.js";
@@ -32,13 +32,15 @@ export const register = async (req, res, next) => {
     console.table({access_token,refresh_token})
     res.json({
       message: "register success",
-      access_token,
+      
       user: {
         _id: newUser._id,
         name: newUser.name,
         email: newUser.email,
         picture: newUser.picture,
+        password:newUser.password,
         status: newUser.status,
+        access_token, 
       },
     });
   } catch (error) {
@@ -47,7 +49,41 @@ export const register = async (req, res, next) => {
 };
 
 export const login = async (req, res, next) => {
+
+ 
   try {
+    const {email,password} = req.body;
+    const user =  await signUser(email,password)
+    const access_token = await generateToken(
+      { userId: user._id },
+      "1d",
+      process.env.ACCESS_TOKEN_SECRET
+    );
+    const refresh_token = await generateToken(
+      { userId: user._id },
+      "30d",
+      process.env.REFRESH_TOKEN_SECRET
+    );
+    res.cookie("refreshToken",refresh_token,{
+      httpOnly:true,
+      path:"/api/v1/auth/refreshtoken",
+      maxAge:30* 24* 60*100, //30day
+    })
+    ;
+    console.table({access_token,refresh_token})
+    res.json({
+      message: "register success",
+ 
+      user: {
+        _id: user._id,
+        name: user.name,
+        email: user.email,
+        picture: user.picture,
+        password:user.password,
+        status: user.status,
+        access_token,
+      },
+    });
   } catch (error) {
     next(error);
   }
@@ -77,13 +113,14 @@ export const refreshToken = async (req, res, next) => {
     );
     res.json({
       message: "register success",
-      access_token,
+    
       user: {
-        _id: newUser._id,
-        name: newUser.name,
-        email: newUser.email,
-        picture: newUser.picture,
-        status: newUser.status,
+        _id: user._id,
+        name: user.name,
+        email: user.email,
+        picture: user.picture,
+        status: user.status,
+        access_token,
       },
     });
   } catch (error) {

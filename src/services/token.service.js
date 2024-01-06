@@ -6,6 +6,6 @@ let token = await  sign(payload,expiresIn,secret);
 return token
 }
 export const verifyToken = async (token,secret) =>{
-    let check = verify(token, secret);
+    let check = await verify(token, secret);
     return check
 }
