@@ -32,7 +32,7 @@ const userSchema = mongoose.Schema(
   },
   {
     colection: "users",
-    tymeStamps: true,
+    timeStamps: true,
   }
 );
 
@@ -51,6 +51,6 @@ userSchema.pre("save", async function (next) {
   }
 });
 const UserModel =
-mongoose.models.UserModel || mongoose.model("UserModel ", userSchema);
+mongoose.models.UserModel || mongoose.model("UserModel", userSchema);
 
 export default UserModel;

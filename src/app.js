@@ -23,7 +23,7 @@ app.use(mongoSanitize());
 app.use(cookieParser());
 
 app.use(compression());
-
+app.use(morgan("dev"));
 app.use(
     fileUpload({
         useTempFiles:true

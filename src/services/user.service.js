@@ -8,3 +8,4 @@ export const findUser = async(userId) => {
     if(!user) throw createHttpError.BadRequest("Please fill all fields.")
     return user
 }
+
