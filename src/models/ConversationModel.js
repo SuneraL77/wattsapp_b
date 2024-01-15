@@ -29,7 +29,7 @@ const ConversationSchema = mongoose.Schema({
     },
     admin:{
         type:ObjectId,
-        ref:"user"
+        ref:"UserModel"
     }
 },{
     collection:"conversations",
