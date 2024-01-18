@@ -10,7 +10,7 @@ export const createMessage = async (data) => {
 };
 
 export const populatedMessage = async (id) => {
-  console.log(id);
+
   let msg = await MessageModel.findById(id)
     .populate({
       path: "sender",

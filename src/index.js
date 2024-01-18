@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import { Server } from "socket.io";
 import app from "./app.js";
 import logger from "./configs/logger.config.js";
 //create express app
@@ -30,6 +31,21 @@ let server;
 server = app.listen(PORT, () => {
   logger.info(`server is listening at ${PORT}`);
   console.log("process => id", process.pid);
+});
+
+// soket io
+const io = new Server(server, {
+  pingTimeout: 600000,
+  cors: {
+    origin:process.env.CLIENT_ENDPOINT,
+  },
+});
+io.on("connection",(socket) => {
+  logger.info("soket io connected successfuly");
+  socket.on('sendMessage',(msg) =>{
+    console.log('message sent to backend',msg)
+   // io.emit("receiveMessage",msg)
+  })
 });
 
 //handle server errors

@@ -9,7 +9,7 @@ try{
         logger.error('Please add a search query frist ')
         throw createHttpError.BadRequest("Opps..Somthing went wrong")
     }
-    const users = await searchUsersService(keyword);
+    const users = await searchUsersService(keyword,req.user.userId);
     res.status(200).json(users)
 
 }catch(error){

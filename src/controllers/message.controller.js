@@ -23,7 +23,7 @@ export const sendMessage = async (req, res, next) => {
     let newMessage = await createMessage(msgData);
 
     let populatedMessage1 = await populatedMessage(newMessage._id);
-    await updateLatesMessage(convo_id, newMessage._id);
+    await updateLatesMessage(convo_id, newMessage);
     res.json(populatedMessage1);
   } catch (error) {
     console.log(error);

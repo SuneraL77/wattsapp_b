@@ -2,12 +2,12 @@ import ConversationModel from "../models/ConversationModel.js";
 import UserModel from "../models/userModel.js";
 import createHttpError from "http-errors";
 
-export const doesConversationExist = async (sender_id, recever_id) => {
+export const doesConversationExist = async (sender_id, receiver_id) => {
   let convos = await ConversationModel.find({
     isGroup: false,
     $and: [
-      { users: { $elemMatch: { $eq: sender_id } } },
-      { users: { $elemMatch: { $eq: recever_id } } },
+      { users: { $elemMatch: { $eq: sender_id  } } },
+      { users: { $elemMatch: { $eq: receiver_id  } } },
     ],
   })
     .populate("users", "-password")
@@ -42,6 +42,7 @@ export const populateConversation = async (id, fieldToPopulate,fieldsToRemove) =
 
 export const getUserConversation = async (user_id) => {
   let conversations;
+
   await ConversationModel.find({
     users: { $elemMatch: { $eq: user_id } },
   })
@@ -49,16 +50,15 @@ export const getUserConversation = async (user_id) => {
     .populate("admin", "-password")
     .populate("latestMessage")
     .sort({ updatedAt: -1 })
-    .then(async (results) => {
-      results = await UserModel.populate(results, {
-        path: "letestMessage.sender",
-        select: "name email pocture status",
-      });
+    .then(async (results) =>{
+      results = await UserModel.populate(results,{
+        path:"latestMessage.sender",
+        select:'name email picture, status'
+      })
       conversations = results;
     })
-    .catch((err) => {
-      throw createHttpError.BadRequest("Opps..Somthong went wrong");
-    });
+
+  
   return conversations;
 };
 

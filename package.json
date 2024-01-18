@@ -25,6 +25,8 @@
     "mongose": "^0.0.2-security",
     "morgan": "^1.10.0",
     "nodemon": "^3.0.1",
+    "socket.io": "^4.7.4",
+    "soket.io": "^0.0.1-security",
     "trim-request": "^1.0.6",
     "validator": "^13.11.0",
     "winston": "^3.11.0"
